@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src https://api.github.com; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'"><meta name="referrer" content="no-referrer"><meta name="color-scheme" content="light"><meta name="description" content="简洁的私人账号与密码钥匙串">
+<title>钥匙串 · 私人密码库</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='12' fill='%23294f46'/%3E%3Ctext x='9' y='29' font-size='28' fill='white'%3EK%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header><a class="brand" href="./"><span class="logo">K</span>钥匙串<span class="brand-note">PRIVATE VAULT</span></a><span class="status">你的账号，妥善收好</span></header>
+<main id="login-view">
+<section class="intro"><span class="eyebrow">一个安静的密码收纳处</span><h1>所有账号，<br>一把钥匙。</h1><p>把零散的账号和密码放在一起。<br>需要的时候，登录就能找到。</p><div class="intro-bottom"><span>01 / 登录</span><span>02 / 打开钥匙串</span></div></section>
+<section class="login-card" aria-labelledby="login-title"><span class="lock-icon" aria-hidden="true">⌑</span><h2 id="login-title">打开你的钥匙串</h2><p class="muted" id="login-hint">使用你的登录密码访问密码库。</p><form id="login-form"><label for="login-name">登录账号</label><input id="login-name" name="username" autocomplete="username" placeholder="输入登录账号" required><label for="login-password">登录密码</label><input id="login-password" name="password" type="password" autocomplete="current-password" placeholder="输入登录密码" required><button class="primary" id="login-submit" type="submit">登录并解锁 <span>↗</span></button><p id="login-message" role="status" class="message"></p></form><p class="footnote" id="setup-note">资料加密同步 · 登录密码请向管理员获取</p></section>
+</main>
+<section id="vault-view" hidden><div class="vault-heading"><div><span class="eyebrow">PRIVATE VAULT</span><h1>我的钥匙串</h1><p class="muted" id="entry-count">所有账号，都在这里。</p></div><div class="actions"><button id="refresh-button" type="button">刷新</button><button id="admin-button" type="button">管理员</button><button id="lock-button" type="button">锁定</button><button id="add-button" hidden class="primary" type="button">＋ 添加账号</button></div></div><div id="entries"></div><p id="vault-message" role="status"></p></section>
+<dialog id="entry-dialog"><form id="entry-form"><div class="dialog-heading"><h2>添加账号</h2><button id="close-dialog" type="button" aria-label="关闭">×</button></div><label for="entry-title">名称</label><input id="entry-title" maxlength="100" placeholder="例如：邮箱、工作平台" required><label for="entry-user">账号</label><input id="entry-user" maxlength="300" autocomplete="off" required><label for="entry-password">密码</label><input id="entry-password" type="password" maxlength="1000" autocomplete="new-password" required><button id="entry-save" class="primary" type="submit">保存账号</button><p id="entry-message" role="status"></p></form></dialog>
+<footer><span>钥匙串 / PRIVATE VAULT</span><span>少一点遗忘，多一点从容。</span></footer>
+<dialog id="admin-dialog"><form id="admin-form"><div class="dialog-heading"><h2>开启管理员模式</h2><button id="close-admin" type="button" aria-label="关闭">×</button></div><p class="muted">使用 GitHub 授权验证修改权限。授权仅在当前页面有效，锁定后清除。</p><label for="admin-token">GitHub 管理员授权令牌</label><input id="admin-token" type="password" autocomplete="off" required placeholder="粘贴仅授权本仓库的令牌"><p class="footnote">在 GitHub 创建 Fine-grained token，仅选择 keychain 仓库，并给予 Contents 读写权限。<a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer">前往 GitHub 创建</a></p><button id="admin-submit" class="primary" type="submit">验证并开启</button><p id="admin-message" role="status" class="message"></p></form></dialog>
+<dialog id="delete-dialog"><form id="delete-form"><h2>删除账号</h2><p id="delete-name"></p><p class="muted">账号将从当前列表移除。GitHub 仍保留之前的加密历史版本。</p><div class="actions"><button id="cancel-delete" type="button">取消</button><button id="confirm-delete" class="primary" type="submit">删除</button></div><p id="delete-message" role="status" class="message"></p></form></dialog>
+<script src="app.js" type="module"></script>
+</body></html>

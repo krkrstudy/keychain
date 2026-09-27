@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "algorithm": "AES-GCM",
+  "iterations": 600000,
+  "salt": "fZwcZBVgT3PCm1PJ4iWSyA==",
+  "iv": "y0VvW9nV2ulKW16y",
+  "ciphertext": "/J0s9yIgR3lRCI3vdxwK9Hwz8wJayJi5W39nlUNI"
+}
