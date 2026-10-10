@@ -1,0 +1,10 @@
+{
+  "id": "./", "name": "钥匙串 · 私人密码库", "short_name": "钥匙串",
+  "lang": "zh-CN", "start_url": "./", "scope": "./", "display": "standalone",
+  "background_color": "#fcfaf9", "theme_color": "#94070a",
+  "description": "常用账号加密保存，离线解锁查看。",
+  "icons": [
+    {"src":"icons/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
+    {"src":"icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
+  ]
+}

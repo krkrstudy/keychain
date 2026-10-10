@@ -1,0 +1,22 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { saveOffline, loadOffline, clearOffline } from '../offline.js';
+import { freshSalt, deriveKey, encryptVault, decryptVault } from '../crypto.js';
+test('offline storage persists only ciphertext, survives lock, and requires original credentials', async () => {
+  const store = new Map();
+  const storage = { getItem: k => store.get(k) ?? null, setItem: (k,v) => store.set(k,v), removeItem: k => store.delete(k) };
+  const salt = freshSalt(), key = await deriveKey('fake-viewer', 'fake-view-password', salt);
+  const data = {entries:[{id:'a',title:'测试平台',username:'fake-user',password:'fake-business-password'}]};
+  const envelope = await encryptVault(data, key, salt);
+  saveOffline({envelope:{...envelope,password:'must-not-store'},revision:4,key,data,adminSession:'must-not-store'},storage);
+  const raw = [...store.values()][0];
+  for (const secret of ['fake-user','fake-business-password','fake-view-password','must-not-store','adminSession']) assert.equal(raw.includes(secret),false);
+  const copy = loadOffline(storage);
+  assert.equal(copy.revision,4);
+  assert.deepEqual(await decryptVault(copy.envelope,await deriveKey('fake-viewer','fake-view-password',copy.envelope.salt)),data);
+  await assert.rejects(decryptVault(copy.envelope,await deriveKey('fake-viewer','wrong',salt)));
+  assert.throws(() => saveOffline({envelope,revision:-1},storage));
+  clearOffline(storage); assert.equal(loadOffline(storage),null);
+  storage.setItem('keychain-encrypted-offline-v1','bad'); assert.equal(loadOffline(storage),null);
+  assert.throws(() => saveOffline({envelope,revision:4},{setItem(){throw new Error('quota');}}),/未能保存/);
+});
