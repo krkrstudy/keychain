@@ -1,0 +1,26 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { initialize, unlock, backup, decodeBackup, mergeEntries, validNewPassword } from '../private-vault.js';
+import { encryptVault } from '../crypto.js';
+import { record } from '../store.js';
+test('initialization requires a new password; default cannot unlock an initialized vault', async () => {
+  assert.throws(()=>validNewPassword('123456','123456'));
+  assert.throws(()=>validNewPassword('long-enough','different'));
+  const file=await initialize('fake-private-pass','fake-private-pass');
+  const {key,data}=await unlock(file,'admin','fake-private-pass');
+  assert.deepEqual(data,{entries:[]});
+  await assert.rejects(unlock(file,'admin','123456'));
+  await assert.rejects(unlock(file,'viewer','fake-private-pass'));
+  const entries=[{id:'one',title:'仅测试',username:'fake-account',password:'fake-business-secret'}];
+  const envelope=await encryptVault({entries},key,file.envelope.salt);
+  const next={...file,envelope,revision:2};
+  const exported=backup(next);
+  for(const secret of ['fake-private-pass','fake-account','fake-business-secret']) assert(!JSON.stringify(exported).includes(secret));
+  assert.deepEqual(await decodeBackup(JSON.stringify(exported),'fake-private-pass'),{entries});
+  await assert.rejects(decodeBackup(JSON.stringify(exported),'wrong'));
+  await assert.rejects(decodeBackup('{','fake-private-pass'));
+  assert.deepEqual(mergeEntries(entries,[...entries,{...entries[0],id:'two'}]),[...entries,{...entries[0],id:'two'}]);
+  const clean=record({...next,key,data,password:'must-not-store'});
+  assert(!JSON.stringify(clean).includes('must-not-store'));
+  assert.throws(()=>record({...file,revision:0}));
+});

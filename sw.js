@@ -1,5 +1,5 @@
-const CACHE = 'keychain-shell-20261010-1';
-const FILES = ['index.html', 'style.css', 'app.js', 'crypto.js', 'offline.js', 'pwa.js', 'manifest.webmanifest', 'icons/key.svg', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png'];
+const CACHE = 'keychain-shell-20261010-private-1';
+const FILES = ['index.html', 'style.css', 'app.js', 'crypto.js', 'store.js', 'private-vault.js', 'offline.js', 'pwa.js', 'manifest.webmanifest', 'icons/key.svg', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png'];
 const urls = FILES.map(file => new URL(file, self.registration.scope).href);
 self.addEventListener('install', event => event.waitUntil((async () => {
   const cache = await caches.open(CACHE);
